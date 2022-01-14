@@ -1,15 +1,14 @@
 import {InMemoryDbService, RequestInfo} from "angular-in-memory-web-api";
-import { Observable } from "rxjs";
-
+import {Category} from "./pages/categories/shared/category.model"
 export class InMemoryDatabase implements InMemoryDbService {
 
     createDb(){
-        const categories = [
-            {id:1, name:'Moradia', descrption:'Pagamentos de Contas da Casa'},
-            {id:2, name:'Saúde', descrption:'Plano de Saúde Remédios'},
+        const categories: Category[] = [
+            {id:1, name:'Moradia', description:'Pagamentos de Contas da Casa'},
+            {id:2, name:'Saúde', description:'Plano de Saúde Remédios'},
             {id:3, name:'Lazer', description: 'Cinema, parques, praia, etc'},
-            {id:4, name:'Salário', descrption:'Recebimento de Salário'},
-            {id:5, name:'Freelas', descrption:'Trabalhos como freelancer'},
+            {id:4, name:'Salário', description:'Recebimento de Salário'},
+            {id:5, name:'Freelas', description:'Trabalhos como freelancer'},
         ]
 
         return {categories}
