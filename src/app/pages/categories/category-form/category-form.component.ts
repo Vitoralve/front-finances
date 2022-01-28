@@ -7,8 +7,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CategoryFormComponent implements OnInit {
 
-  constructor() { }
+  items:any;
 
+  constructor() { 
+
+    this.items = [
+      {label: 'Home', icon:'pi pi-home', routerLink:'/'},
+      {label: 'Categorias', routerLink:'/categories'},
+      {label: 'Nova Categoria'}
+    ]
+
+   }
+
+  
   ngOnInit(): void {
   }
 
