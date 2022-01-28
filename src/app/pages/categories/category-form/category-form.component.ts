@@ -55,8 +55,6 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
      this.buildCategoryForm();
      this.loadCategory();
 
-     this.userId = this.route.snapshot.params["id"]
-
   }
 
 
@@ -77,7 +75,7 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
   }
 
   private loadCategory(){
-
+    this.route.params.subscribe(params => this.userId = params['id']);
     if(this.currentAction == "edit"){
       this.route.paramMap.pipe(
         switchMap(params => this.categoryService.getById(this.userId))
