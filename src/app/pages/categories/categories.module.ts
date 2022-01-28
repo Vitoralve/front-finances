@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from "@angular/forms";
 
 import { CategoriesRoutingModule } from './categories-routing.module';
 import { CategoryListComponent } from './category-list/category-list.component';
@@ -22,7 +23,8 @@ import {MenuModule} from 'primeng/menu';
     CommonModule,
     CategoriesRoutingModule,
     BreadcrumbModule,
-    MenuModule
+    MenuModule,
+    ReactiveFormsModule
   ]
 })
 export class CategoriesModule { }
