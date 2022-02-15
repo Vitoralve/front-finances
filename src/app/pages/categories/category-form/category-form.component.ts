@@ -6,6 +6,7 @@ import { CategoryService } from "../shared/category.service";
 import { Category } from "../shared/category.model";
 
 import { switchMap } from "rxjs/operators";
+import * as toastr from "toastr";
 import { param } from 'jquery';
 
 
@@ -38,7 +39,7 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
     this.items = [
       {label: 'Home', icon:'pi pi-home', routerLink:'/'},
       {label: 'Categorias', routerLink:'/categories'},
-      {label: 'Nova Categoria'}
+      {label: 'Adicionar/Editar'}
     ]
 
    }
@@ -46,6 +47,16 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
 
   ngAfterContentChecked(): void {
     this.setPageTitle();
+  }
+
+  submitForm(){
+    this.submittingForm = true;
+
+    if(this.currentAction = 'new'){
+       this.createCategory();
+    }else{
+       this.updateCategory();
+    } 
   }
 
   
@@ -59,14 +70,14 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
 
 
   // Metodos Privados
-  private setCurrentAction(){
+   setCurrentAction(){
     if(this.route.snapshot.url[0].path == "new")
     this.currentAction = "new"
     else
     this.currentAction = "edit"
   }
 
-  private buildCategoryForm(){
+   buildCategoryForm(){
     this.categoryForm = this.formBuilder.group({
       id: [null],
       name: [null, [Validators.required, Validators.minLength(2)]],
@@ -74,7 +85,7 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
     })
   }
 
-  private loadCategory(){
+   loadCategory(){
     this.route.params.subscribe(params => this.userId = params['id']);
     if(this.currentAction == "edit"){
       this.route.paramMap.pipe(
@@ -94,7 +105,7 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
 
 
   //Carregamento de Titulo de acordo com a funcão
-  private setPageTitle(){
+   setPageTitle(){
     if(this.currentAction == 'new'){
       this.pageTitle = "Cadastro de Nova Categoria"
     }else{
@@ -104,5 +115,48 @@ export class CategoryFormComponent implements OnInit, AfterContentChecked {
 
   }
 
+  createCategory(){
+    const category: Category = Object.assign(new Category(), this.categoryForm.value);
 
+    this.categoryService.create(category)
+    .subscribe(
+      category => this.actionsForSucces(category),
+      error => this.actionsForError(error)
+    )
+  }
+
+  updateCategory(){
+    const category: Category = Object.assign(new Category(), this.categoryForm.value);
+
+    this.categoryService.update(category)
+    .subscribe(
+      category => this.actionsForSucces(category),
+      error => this.actionsForError(error)
+    )
+
+  }
+
+  actionsForSucces(category: Category){
+    toastr.success("Solicitação processada com sucesso!")
+
+    //reload componente
+    this.router.navigateByUrl('categories', {skipLocationChange:true}).then(
+      () => this.router.navigate(['categories', category.id, "edit"])
+    )
+
+  }
+
+  actionsForError(error:any){
+    toastr.error("Ocorreu um erro ao processar a sua solicitação")
+
+    this.submittingForm = false
+
+    if(error.status === 422  ){
+      this.serverErrorMessages = JSON.parse(error._body).errors;
+    }else{
+      this.serverErrorMessages = ["Falha na comunicação com o servidor"]
+    }
+  }
+
+  
 }
